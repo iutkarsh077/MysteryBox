@@ -1,0 +1,52 @@
+[
+  {
+      "title": "Message from User123",
+      "content": "Hey, how are you doing today?",
+      "received": "10 minutes ago"
+  },
+  {
+      "title": "Message from SecretAdmirer",
+      "content": "I really liked your recent post!",
+      "received": "2 hours ago"
+  },
+  {
+      "title": "Message from MysteryGuest",
+      "content": "Do you have any book recommendations?",
+      "received": "1 day ago"
+  },
+  {
+      "title": "Message from CuriousMind",
+      "content": "I saw your article about AI ethics.",
+      "received": "3 days ago"
+  },
+  {
+      "title": "Message from Bookworm123",
+      "content": "Looking for some new fantasy novels to read.",
+      "received": "5 days ago"
+  },
+  {
+      "title": "Message from TechEnthusiast",
+      "content": "Do you have any recommendations for tech blogs to follow?",
+      "received": "1 week ago"
+  },
+  {
+      "title": "Message from PoetryLover",
+      "content": "I'm in the mood for some poetry. Any poets recommend?",
+      "received": "10 days ago"
+  },
+  {
+      "title": "Message from HistoryBuff",
+      "content": "I'm interested in ancient civilizations.",
+      "received": "2 weeks ago"
+  },
+  {
+      "title": "Message from ArtAppreciator",
+      "content": "I enjoy exploring different art styles.",
+      "received": "3 weeks ago"
+  },
+  {
+      "title": "Message from NatureExplorer",
+      "content": "I love nature photography.",
+      "received": "1 month ago"
+  }
+]
