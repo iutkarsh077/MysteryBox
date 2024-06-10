@@ -1,12 +1,11 @@
-"use client";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
+'use client'
+
+import React, { useState } from 'react';
+import axios, { AxiosError } from 'axios';
+import dayjs from 'dayjs';
+import { X } from 'lucide-react';
+import { Message } from '@/models/User';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import {
   AlertDialog,
   AlertDialogAction,
@@ -17,20 +16,17 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
   AlertDialogTrigger,
-} from "@/components/ui/alert-dialog";
-import { Button } from "./ui/button";
-import { X } from "lucide-react";
-import { Message } from "@/models/User";
-import { useToast } from "./ui/use-toast";
-import axios, { AxiosError } from "axios";
-import { ApiResponse } from "@/types/ApiResponse";
+} from '@/components/ui/alert-dialog';
+import { Button } from './ui/button';
+import { useToast } from '@/components/ui/use-toast';
+import { ApiResponse } from '@/types/ApiResponse';
 
 type MessageCardProps = {
   message: Message;
   onMessageDelete: (messageId: string) => void;
 };
 
-const MessageCard = ({ message, onMessageDelete }: MessageCardProps) => {
+export function MessageCard({ message, onMessageDelete }: MessageCardProps) {
   const { toast } = useToast();
 
   const handleDeleteConfirm = async () => {
@@ -42,24 +38,26 @@ const MessageCard = ({ message, onMessageDelete }: MessageCardProps) => {
         title: response.data.message,
       });
       onMessageDelete(message._id);
+
     } catch (error) {
       const axiosError = error as AxiosError<ApiResponse>;
       toast({
-        title: "Error",
+        title: 'Error',
         description:
-          axiosError.response?.data.message ?? "Failed to delete message",
-        variant: "destructive",
+          axiosError.response?.data.message ?? 'Failed to delete message',
+        variant: 'destructive',
       });
-    }
+    } 
   };
+
   return (
-    <>
-      <Card>
-        <CardHeader>
-          <CardTitle>Card Title</CardTitle>
+    <Card className="card-bordered">
+      <CardHeader>
+        <div className="flex justify-between items-center">
+          <CardTitle>{message.content}</CardTitle>
           <AlertDialog>
             <AlertDialogTrigger asChild>
-              <Button variant="destructive">
+              <Button variant='destructive'>
                 <X className="w-5 h-5" />
               </Button>
             </AlertDialogTrigger>
@@ -68,26 +66,27 @@ const MessageCard = ({ message, onMessageDelete }: MessageCardProps) => {
                 <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
                 <AlertDialogDescription>
                   This action cannot be undone. This will permanently delete
-                  your account and remove your data from our servers.
+                  this message.
                 </AlertDialogDescription>
               </AlertDialogHeader>
               <AlertDialogFooter>
-                <AlertDialogCancel>Cancel</AlertDialogCancel>
-                <AlertDialogAction
-                  onClick={handleDeleteConfirm}
-                  className="text-red-500"
-                >
+                <AlertDialogCancel>
+                  Cancel
+                </AlertDialogCancel>
+                <AlertDialogAction onClick={handleDeleteConfirm}>
                   Continue
                 </AlertDialogAction>
               </AlertDialogFooter>
             </AlertDialogContent>
           </AlertDialog>
-          <CardDescription>Card Description</CardDescription>
-        </CardHeader>
-        <CardContent></CardContent>
-      </Card>
-    </>
+        </div>
+        <div className="text-sm">
+          {dayjs(message.createdAt).format('MMM D, YYYY h:mm A')}
+        </div>
+      </CardHeader>
+      <CardContent></CardContent>
+    </Card>
   );
-};
+}
 
 export default MessageCard;

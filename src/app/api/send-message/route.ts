@@ -11,7 +11,6 @@ export async function POST(request: Request){
 
     try {
         const user = await UserModel.findOne({username});
-
         if(!user){
             return NextResponse.json({ success: false, message: "user Not found" }, { status: 404 });
         }

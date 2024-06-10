@@ -61,23 +61,23 @@ function UserDashboard() {
       setIsLoading(true);
       setIsSwitchLoading(false);
       try {
-        const response = await axios.get<ApiResponse>("/api/get-messages");
+        const response = await axios.get<ApiResponse>('/api/get-messages');
         setMessages(response.data.messages || []);
+        console.log(response)
         if (refresh) {
           toast({
-            title: "Refreshed Messages",
-            description: "Showing latest messages",
+            title: 'Refreshed Messages',
+            description: 'Showing latest messages',
           });
         }
       } catch (error) {
         const axiosError = error as AxiosError<ApiResponse>;
-        /*toast({
-          title: "Error",
+        toast({
+          title: 'Error',
           description:
-            "Failed to fetch messages",
-          variant: "destructive",
+            axiosError.response?.data.message ?? 'Failed to fetch messages',
+          variant: 'destructive',
         });
-        console.log(axiosError);*/
       } finally {
         setIsLoading(false);
         setIsSwitchLoading(false);
@@ -126,7 +126,7 @@ function UserDashboard() {
   const { username } = session.user as User;
 
   const baseUrl = `${window.location.protocol}//${window.location.host}`;
-  const profileUrl = `${baseUrl}/u/${username}`;
+  const profileUrl = `${baseUrl}/you/${username}`;
 
   const copyToClipboard = () => {
     navigator.clipboard.writeText(profileUrl);
