@@ -1,8 +1,9 @@
 export const dynamic = "force-dynamic";
 export const revalidate = 0;
 import UserDashboard from "@/components/UserDashBoard";
-
-const Dashboard =  () => {
+import {  cookies } from "next/headers";
+const Dashboard = async () => {
+  cookies();
   return (
     <>
       <UserDashboard />
