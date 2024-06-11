@@ -1,5 +1,4 @@
 "use client";
-import { unstable_noStore as noStore } from "next/cache";
 import MessageCard from "@/components/MessageCard";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
@@ -16,12 +15,14 @@ import React, { useCallback, useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { acceptMessagesSchema as AcceptMessageSchema } from "@/schemas/acceptMessageSchema";
 import Link from "next/link";
+import { useParams } from "next/navigation";
 
 function UserDashboard() {
+  const params = useParams<{ username: string }>();
+  const myusername = params.username;
   const [messages, setMessages] = useState<Message[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [isSwitchLoading, setIsSwitchLoading] = useState(false);
-  noStore();
   const { toast } = useToast();
 
   const handleDeleteMessage = (messageId: string) => {
@@ -61,22 +62,22 @@ function UserDashboard() {
       setIsLoading(true);
       setIsSwitchLoading(false);
       try {
-        const response = await axios.get<ApiResponse>('/api/get-messages');
+        const response = await axios.get<ApiResponse>("/api/get-messages");
         setMessages(response.data.messages || []);
         // console.log(response)
         if (refresh) {
           toast({
-            title: 'Refreshed Messages',
-            description: 'Showing latest messages',
+            title: "Refreshed Messages",
+            description: "Showing latest messages",
           });
         }
       } catch (error) {
         const axiosError = error as AxiosError<ApiResponse>;
         toast({
-          title: 'Error',
+          title: "Error",
           description:
-            axiosError.response?.data.message ?? 'Failed to fetch messages',
-          variant: 'destructive',
+            axiosError.response?.data.message ?? "Failed to fetch messages",
+          variant: "destructive",
         });
       } finally {
         setIsLoading(false);
@@ -118,9 +119,14 @@ function UserDashboard() {
 
   if (!session || !session.user) {
     return (
-      <div className="flex min-h-[500px] justify-center items-center text-3xl">This is DashBoard. Please {" "}<Link href="/sign-in" className="text-blue-600 ml-1 mr-1 font-semibold">
-      LOGIN</Link>{" "} Again.</div>
-    )
+      <div className="flex min-h-[500px] justify-center items-center text-3xl">
+        This is DashBoard. Please{" "}
+        <Link href="/sign-in" className="text-blue-600 ml-1 mr-1 font-semibold">
+          LOGIN
+        </Link>{" "}
+        Again.
+      </div>
+    );
   }
 
   const { username } = session.user as User;
@@ -149,7 +155,9 @@ function UserDashboard() {
             disabled
             className="input input-bordered w-full p-2 mr-0 mb-2 md:mb-0"
           />
-          <Button onClick={copyToClipboard} className="w-full md:w-auto">Copy</Button>
+          <Button onClick={copyToClipboard} className="w-full md:w-auto">
+            Copy
+          </Button>
         </div>
       </div>
 
@@ -164,7 +172,7 @@ function UserDashboard() {
           Accept Messages: {acceptMessages ? "On" : "Off"}
         </span>
       </div>
-      <Separator/>
+      <Separator />
 
       <Button
         className="mt-4 w-full md:w-auto"
