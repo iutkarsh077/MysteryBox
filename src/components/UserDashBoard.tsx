@@ -1,5 +1,4 @@
 "use client";
-
 import MessageCard from "@/components/MessageCard";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
@@ -21,8 +20,9 @@ function UserDashboard() {
   const [messages, setMessages] = useState<Message[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [isSwitchLoading, setIsSwitchLoading] = useState(false);
-  
   const { toast } = useToast();
+
+  const baseUrl = `${window.location.protocol}//${window.location.host}`;
 
   const handleDeleteMessage = (messageId: string) => {
     setMessages(messages.filter((message) => message._id !== messageId));
@@ -40,15 +40,24 @@ function UserDashboard() {
   const fetchAcceptMessages = useCallback(async () => {
     setIsSwitchLoading(true);
     try {
-      const response = await axios.get("/api/accept-messages");
-      setValue("acceptMessages", response.data.isAcceptingMessage);
+      console.log(baseUrl)
+      const response = await fetch(
+        `${baseUrl}/api/accept-messages`,
+        {
+          cache: "no-store",
+          next: {
+            revalidate: 0,
+          },
+          method: "GET",
+        }
+      );
+      const data = await response.json();
+      setValue("acceptMessages", data.isAcceptingMessage);
     } catch (error) {
-      const axiosError = error as AxiosError<ApiResponse>;
+      //   const axiosError = error as AxiosError<ApiResponse>;
       toast({
         title: "Error",
-        description:
-          axiosError.response?.data.message ??
-          "Failed to fetch message settings",
+        description: "Failed to fetch message settings",
         variant: "destructive",
       });
     } finally {
@@ -61,22 +70,28 @@ function UserDashboard() {
       setIsLoading(true);
       setIsSwitchLoading(false);
       try {
-        const response = await axios.get<ApiResponse>('/api/get-messages');
-        setMessages(response.data.messages || []);
+        const response = await fetch(`${baseUrl}/api/get-messages`, {
+            cache: "no-store",
+            next: {
+                revalidate: 0,
+            },
+            method: "GET",
+        });
+        const data = await response.json();
+        setMessages(data.messages || []);
         // console.log(response)
         if (refresh) {
           toast({
-            title: 'Refreshed Messages',
-            description: 'Showing latest messages',
+            title: "Refreshed Messages",
+            description: "Showing latest messages",
           });
         }
       } catch (error) {
-        const axiosError = error as AxiosError<ApiResponse>;
+        // const axiosError = error as AxiosError<ApiResponse>;
         toast({
-          title: 'Error',
-          description:
-            axiosError.response?.data.message ?? 'Failed to fetch messages',
-          variant: 'destructive',
+          title: "Error",
+          description: "Failed to fetch messages",
+          variant: "destructive",
         });
       } finally {
         setIsLoading(false);
@@ -96,20 +111,28 @@ function UserDashboard() {
 
   const handleSwitchChange = async () => {
     try {
-      const response = await axios.post<ApiResponse>("/api/accept-messages", {
-        acceptMessages: !acceptMessages,
+      const response = await fetch(`${baseUrl}/api/accept-messages`, {
+        method: "POST",
+        body: JSON.stringify({ acceptMessages: !acceptMessages }),
+        headers: {
+          "Content-Type": "application/json",
+        },
+        cache: "no-store",
+        next: {
+            revalidate: 0,
+        }
       });
+      const data = await response.json();
       setValue("acceptMessages", !acceptMessages);
       toast({
-        title: response.data.message,
+        title: data.message,
         variant: "default",
       });
     } catch (error) {
-      const axiosError = error as AxiosError<ApiResponse>;
+    //   const axiosError = error as AxiosError<ApiResponse>;
       toast({
         title: "Error",
         description:
-          axiosError.response?.data.message ??
           "Failed to update message settings",
         variant: "destructive",
       });
@@ -118,14 +141,17 @@ function UserDashboard() {
 
   if (!session || !session.user) {
     return (
-      <div className="flex min-h-[500px] justify-center items-center text-3xl">This is DashBoard. Please {" "}<Link href="/sign-in" className="text-blue-600 ml-1 mr-1 font-semibold">
-      LOGIN</Link>{" "} Again.</div>
-    )
+      <div className="flex min-h-[500px] justify-center items-center text-3xl">
+        This is DashBoard. Please{" "}
+        <Link href="/sign-in" className="text-blue-600 ml-1 mr-1 font-semibold">
+          LOGIN
+        </Link>{" "}
+        Again.
+      </div>
+    );
   }
 
   const { username } = session.user as User;
-
-  const baseUrl = `${window.location.protocol}//${window.location.host}`;
   const profileUrl = `${baseUrl}/you/${username}`;
 
   const copyToClipboard = () => {
@@ -149,7 +175,9 @@ function UserDashboard() {
             disabled
             className="input input-bordered w-full p-2 mr-0 mb-2 md:mb-0"
           />
-          <Button onClick={copyToClipboard} className="w-full md:w-auto">Copy</Button>
+          <Button onClick={copyToClipboard} className="w-full md:w-auto">
+            Copy
+          </Button>
         </div>
       </div>
 
@@ -164,7 +192,7 @@ function UserDashboard() {
           Accept Messages: {acceptMessages ? "On" : "Off"}
         </span>
       </div>
-      <Separator/>
+      <Separator />
 
       <Button
         className="mt-4 w-full md:w-auto"
