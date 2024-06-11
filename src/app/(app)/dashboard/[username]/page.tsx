@@ -108,7 +108,7 @@ function UserDashboard() {
     fetchMessages();
 
     fetchAcceptMessages();
-  }, [session, setValue, toast, fetchAcceptMessages, fetchMessages]);
+  }, [session]);
 
   const handleSwitchChange = async () => {
     try {
