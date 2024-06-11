@@ -1,5 +1,5 @@
 "use client";
-
+import { unstable_noStore as noStore } from "next/cache";
 import MessageCard from "@/components/MessageCard";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
@@ -21,7 +21,7 @@ function UserDashboard() {
   const [messages, setMessages] = useState<Message[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [isSwitchLoading, setIsSwitchLoading] = useState(false);
-  
+  noStore();
   const { toast } = useToast();
 
   const handleDeleteMessage = (messageId: string) => {
