@@ -1,4 +1,3 @@
-export const dynamic = "force-dynamic";
 import dbConnect from '@/lib/dbConnect';
 import UserModel from '@/models/User';
 import mongoose from 'mongoose';
