@@ -1,5 +1,4 @@
-'use client'
-
+export const dynamic = "force-dynamic";
 import React, { useState } from 'react';
 import axios, { AxiosError } from 'axios';
 import dayjs from 'dayjs';
@@ -24,9 +23,10 @@ import { ApiResponse } from '@/types/ApiResponse';
 type MessageCardProps = {
   message: Message;
   onMessageDelete: (messageId: string) => void;
-};
+  };
 
-export function MessageCard({ message, onMessageDelete }: MessageCardProps) {
+
+  export function MessageCard({ message, onMessageDelete }: MessageCardProps) {
   const { toast } = useToast();
 
   const handleDeleteConfirm = async () => {
@@ -51,7 +51,7 @@ export function MessageCard({ message, onMessageDelete }: MessageCardProps) {
   };
 
   return (
-    <Card className="card-bordered shadow-lg hover:shadow-2xl">
+    <Card className="card-bordered shadow-lg ease-in-out hover:shadow-2xl">
       <CardHeader>
         <div className="flex justify-between items-center">
           <CardTitle>{message.content}</CardTitle>
