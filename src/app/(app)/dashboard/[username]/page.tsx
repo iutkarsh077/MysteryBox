@@ -38,7 +38,7 @@ function UserDashboard() {
   const { register, watch, setValue } = form;
   const acceptMessages = watch("acceptMessages");
 
-  const fetchAcceptMessages = useCallback(async () => {
+  const fetchAcceptMessages = async () => {
     setIsSwitchLoading(true);
     try {
       const response = await fetch(`${baseUrl}/api/accept-messages`, {
@@ -63,9 +63,9 @@ function UserDashboard() {
     } finally {
       setIsSwitchLoading(false);
     }
-  }, [setValue, toast]);
+  }
 
-  const fetchMessages = useCallback(
+  const fetchMessages = 
     async (refresh: boolean = false) => {
       setIsLoading(true);
       setIsSwitchLoading(false);
@@ -100,9 +100,7 @@ function UserDashboard() {
         setIsLoading(false);
         setIsSwitchLoading(false);
       }
-    },
-    [setIsLoading, setMessages, toast]
-  );
+    };
 
   useEffect(() => {
     if (!session || !session.user) return;
