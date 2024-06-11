@@ -54,7 +54,7 @@ export default function SignInForm() {
     }
 
     if (result?.url) {
-      router.replace('/dashboard');
+      router.replace(`/`);
     }
   };
 

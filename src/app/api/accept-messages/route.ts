@@ -7,24 +7,24 @@ import { User } from 'next-auth';
 export async function POST(request: Request) {
   // Connect to the database
   await dbConnect();
-
   const session = await getServerSession(authOptions);
   const user: User = session?.user;
-  if (!session || !session.user) {
-    return Response.json(
-      { success: false, message: 'Not authenticated' },
-      { status: 401 }
+    console.log("In post aceptmessage toggle")
+    if (!session || !session.user) {
+      return Response.json(
+        { success: false, message: 'Not authenticated' },
+        { status: 401 }
     );
   }
 
   const userId = user._id;
   const { acceptMessages } = await request.json();
-
+  console.log(user)
+  console.log(acceptMessages)
   try {
     // Update the user's message acceptance status
-    const updatedUser = await UserModel.findByIdAndUpdate(
-      userId,
-      { isAcceptingMessages: acceptMessages },
+    const updatedUser = await UserModel.findByIdAndUpdate({ _id: userId },
+      { isAcceptingMessage: acceptMessages },
       { new: true }
     );
 
@@ -61,11 +61,11 @@ export async function POST(request: Request) {
 export async function GET(request: Request) {
   // Connect to the database
   await dbConnect();
+  // console.log("Accept messages api backend")
 
-  // Get the user session
   const session = await getServerSession(authOptions);
   const user = session?.user;
-
+// console.log(user);
   // Check if the user is authenticated
   if (!session || !user) {
     return Response.json(
@@ -76,8 +76,8 @@ export async function GET(request: Request) {
 
   try {
     // Retrieve the user from the database using the ID
-    const foundUser = await UserModel.findById(user._id);
-
+    const foundUser = await UserModel.findById({ _id: user._id });
+    // console.log(foundUser);
     if (!foundUser) {
       // User not found
       return Response.json(

@@ -98,6 +98,7 @@ function UserDashboard() {
 
   const handleSwitchChange = async () => {
     try {
+      console.log("In fetchAcceptMessages POst frontend")
       const response = await axios.post<ApiResponse>(`${baseUrl}/api/accept-messages`, {
         acceptMessages: !acceptMessages,
       });

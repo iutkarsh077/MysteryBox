@@ -16,24 +16,24 @@ export async function GET(request: Request) {
       { status: 401 }
     );
   }
-  const userId = new mongoose.Types.ObjectId(_user._id);
+  const userId = _user._id;
+  // console.log(userId)
   try {
-    const user = await UserModel.aggregate([
-      { $match: { _id: userId } },
-      { $unwind: '$messages' },
-      { $sort: { 'messages.createdAt': -1 } },
-      { $group: { _id: '$_id', messages: { $push: '$messages' } } },
-    ]).exec();
-
-    if (!user || user.length === 0) {
+    const user = await UserModel.findOne({
+      _id: userId
+    });
+    // console.log("In fetchMessages backend");
+    // console.log(user)
+    if (!user) {
       return Response.json(
         { message: 'User not found', success: false },
         { status: 404 }
       );
     }
 
+
     return Response.json(
-      { messages: user[0].messages },
+      { messages: user.messages },
       {
         status: 200,
       }
