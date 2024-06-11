@@ -28,8 +28,8 @@ export async function POST(request: Request) {
 
         return NextResponse.json({ success: true, message: "Message acceptance status successfully", updatedUser }, { status: 201 });
     } catch (error) {
-        console.log("Failed to update user status to accespt messages", error);
-        return NextResponse.json({ success: false, message: "Failed to update user status to accespt messages" }, { status: 500 });
+        console.log("Failed to update user status to accept messages", error);
+        return NextResponse.json({ success: false, message: "Failed to update user status to accept messages" }, { status: 500 });
     }
 }
 

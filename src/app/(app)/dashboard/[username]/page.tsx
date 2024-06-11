@@ -19,17 +19,18 @@ import { useParams } from "next/navigation";
 
 function UserDashboard() {
   const params = useParams<{ username: string }>();
+  const { data: session } = useSession();
   const myusername = params.username;
   const [messages, setMessages] = useState<Message[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [isSwitchLoading, setIsSwitchLoading] = useState(false);
   const { toast } = useToast();
+  const baseUrl = `${window.location.protocol}//${window.location.host}`;
 
   const handleDeleteMessage = (messageId: string) => {
     setMessages(messages.filter((message) => message._id !== messageId));
   };
 
-  const { data: session } = useSession();
 
   const form = useForm({
     resolver: zodResolver(AcceptMessageSchema),
@@ -41,7 +42,7 @@ function UserDashboard() {
   const fetchAcceptMessages = useCallback(async () => {
     setIsSwitchLoading(true);
     try {
-      const response = await axios.get("/api/accept-messages");
+      const response = await axios.get(`${baseUrl}/api/accept-messages`);
       setValue("acceptMessages", response.data.isAcceptingMessage);
     } catch (error) {
       const axiosError = error as AxiosError<ApiResponse>;
@@ -62,7 +63,7 @@ function UserDashboard() {
       setIsLoading(true);
       setIsSwitchLoading(false);
       try {
-        const response = await axios.get<ApiResponse>("/api/get-messages");
+        const response = await axios.get<ApiResponse>(`${baseUrl}/api/get-messages`);
         setMessages(response.data.messages || []);
         // console.log(response)
         if (refresh) {
@@ -97,7 +98,7 @@ function UserDashboard() {
 
   const handleSwitchChange = async () => {
     try {
-      const response = await axios.post<ApiResponse>("/api/accept-messages", {
+      const response = await axios.post<ApiResponse>(`${baseUrl}/api/accept-messages`, {
         acceptMessages: !acceptMessages,
       });
       setValue("acceptMessages", !acceptMessages);
@@ -131,7 +132,7 @@ function UserDashboard() {
 
   const { username } = session.user as User;
 
-  const baseUrl = `${window.location.protocol}//${window.location.host}`;
+  
   const profileUrl = `${baseUrl}/you/${username}`;
 
   const copyToClipboard = () => {
