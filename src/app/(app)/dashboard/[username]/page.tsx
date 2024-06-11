@@ -43,9 +43,6 @@ function UserDashboard() {
     try {
       const response = await fetch(`${baseUrl}/api/accept-messages`, {
         method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-        },
         cache: "no-store",
         next: {
           revalidate: 0,
@@ -72,9 +69,6 @@ function UserDashboard() {
       try {
         const response = await fetch(`${baseUrl}/api/get-messages`, {
           method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-          },
           cache: "no-store",
           next: {
             revalidate: 0,
@@ -115,9 +109,6 @@ function UserDashboard() {
       console.log("In fetchAcceptMessages POst frontend");
       const response = await fetch(`${baseUrl}/api/accept-messages`, {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
         body: JSON.stringify({ acceptMessages: !acceptMessages }),
         cache: "no-store",
         next: {
