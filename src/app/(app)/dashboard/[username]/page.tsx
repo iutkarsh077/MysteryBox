@@ -31,7 +31,6 @@ function UserDashboard() {
     setMessages(messages.filter((message) => message._id !== messageId));
   };
 
-
   const form = useForm({
     resolver: zodResolver(AcceptMessageSchema),
   });
@@ -42,15 +41,23 @@ function UserDashboard() {
   const fetchAcceptMessages = useCallback(async () => {
     setIsSwitchLoading(true);
     try {
-      const response = await axios.get(`${baseUrl}/api/accept-messages`);
-      setValue("acceptMessages", response.data.isAcceptingMessage);
+      const response = await fetch(`${baseUrl}/api/accept-messages`, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        cache: "no-store",
+        next: {
+          revalidate: 0,
+        },
+      });
+      const data = await response.json();
+      setValue("acceptMessages", data.isAcceptingMessage);
     } catch (error) {
-      const axiosError = error as AxiosError<ApiResponse>;
+      // const axiosError = error as AxiosError<ApiResponse>;
       toast({
         title: "Error",
-        description:
-          axiosError.response?.data.message ??
-          "Failed to fetch message settings",
+        description: "Failed to fetch message settings",
         variant: "destructive",
       });
     } finally {
@@ -63,8 +70,18 @@ function UserDashboard() {
       setIsLoading(true);
       setIsSwitchLoading(false);
       try {
-        const response = await axios.get<ApiResponse>(`${baseUrl}/api/get-messages`);
-        setMessages(response.data.messages || []);
+        const response = await fetch(`${baseUrl}/api/get-messages`, {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          cache: "no-store",
+          next: {
+            revalidate: 0,
+          },
+        });
+        const data = await response.json();
+        setMessages(data.messages || []);
         // console.log(response)
         if (refresh) {
           toast({
@@ -73,11 +90,10 @@ function UserDashboard() {
           });
         }
       } catch (error) {
-        const axiosError = error as AxiosError<ApiResponse>;
+        // const axiosError = error as AxiosError<ApiResponse>;
         toast({
           title: "Error",
-          description:
-            axiosError.response?.data.message ?? "Failed to fetch messages",
+          description: "Failed to fetch messages",
           variant: "destructive",
         });
       } finally {
@@ -98,22 +114,29 @@ function UserDashboard() {
 
   const handleSwitchChange = async () => {
     try {
-      console.log("In fetchAcceptMessages POst frontend")
-      const response = await axios.post<ApiResponse>(`${baseUrl}/api/accept-messages`, {
-        acceptMessages: !acceptMessages,
+      console.log("In fetchAcceptMessages POst frontend");
+      const response = await fetch(`${baseUrl}/api/accept-messages`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ acceptMessages: !acceptMessages }),
+        cache: "no-store",
+        next: {
+          revalidate: 0,
+        },
       });
+      const data = await response.json();
       setValue("acceptMessages", !acceptMessages);
       toast({
-        title: response.data.message,
+        title: data.message,
         variant: "default",
       });
     } catch (error) {
-      const axiosError = error as AxiosError<ApiResponse>;
+      // const axiosError = error as AxiosError<ApiResponse>;
       toast({
         title: "Error",
-        description:
-          axiosError.response?.data.message ??
-          "Failed to update message settings",
+        description: "Failed to update message settings",
         variant: "destructive",
       });
     }
@@ -133,7 +156,6 @@ function UserDashboard() {
 
   const { username } = session.user as User;
 
-  
   const profileUrl = `${baseUrl}/you/${username}`;
 
   const copyToClipboard = () => {
