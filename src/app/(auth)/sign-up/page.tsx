@@ -74,7 +74,7 @@ export default function SignUpForm() {
         title: 'Success',
         description: response.data.message,
       });
-
+      console.log("In sign up page now")
       router.replace(`/verify/${username}`);
 
       setIsSubmitting(false);

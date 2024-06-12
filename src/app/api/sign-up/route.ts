@@ -4,6 +4,7 @@ import bcrypt from 'bcryptjs';
 import { sendVerificationEmail } from "@/helpers/sendVerificationEmail";
 import { NextResponse } from "next/server";
 import { use } from "react";
+import Sendit from "@/lib/SendIt";
 export async function POST(request: Request) {
     dbConnect();
     try {
@@ -55,10 +56,9 @@ export async function POST(request: Request) {
         }
 
         //send verification email
-        const emailResponse = await sendVerificationEmail(email, username, verifyCode);
-        if (!emailResponse.success) {
-            return NextResponse.json({ success: false, message: "Error in sending Email" }, { status: 500 });
-        }
+        console.log("In api/signup", email, username, verifyCode)
+        const emailResponse = await Sendit({to: email, name: username, subject: "Verification Email", body: verifyCode});
+       
 
         return NextResponse.json({ success: true, message: "User Registered successfully, plz verify your email!" }, { status: 201 });
 
