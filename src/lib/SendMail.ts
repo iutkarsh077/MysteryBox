@@ -1,5 +1,7 @@
+"use server";
+import { revalidatePath } from "next/cache";
 import nodemailer from "nodemailer";
-import * as handlebars from "handlebars";
+
 
 export async function sendMail({
   to,
@@ -30,6 +32,7 @@ export async function sendMail({
   }
 
   try {
+    revalidatePath("/signup");
     const sendResult = await transport.sendMail({
       from: SMTP_EMAIL,
       to,

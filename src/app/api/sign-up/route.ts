@@ -1,3 +1,4 @@
+"use server";
 import dbConnect from "@/lib/dbConnect";
 import UserModel from "@/models/User";
 import bcrypt from 'bcryptjs';
@@ -5,8 +6,10 @@ import { sendVerificationEmail } from "@/helpers/sendVerificationEmail";
 import { NextResponse } from "next/server";
 import { use } from "react";
 import Sendit from "@/lib/SendIt";
+import { revalidatePath } from "next/cache";
 export async function POST(request: Request) {
     dbConnect();
+    revalidatePath("/sign-up");
     try {
         const { username, email, password } = await request.json();
 

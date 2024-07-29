@@ -18,6 +18,7 @@
     "@radix-ui/react-switch": "^1.0.3",
     "@radix-ui/react-toast": "^1.1.5",
     "@react-email/components": "^0.0.19",
+    "@react-email/render": "^0.0.17",
     "@types/bcryptjs": "^2.4.6",
     "@types/nodemailer": "^6.4.15",
     "ai": "^3.0.31",
