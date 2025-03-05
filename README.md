@@ -4,6 +4,7 @@
 MysteryBox is the online platform for participating in anonymous conversations and sharing ideas. Developed mainly using Next.js  technologies, MysteryBox establishes a secure environment where your real identity is kept hidden, enabling authentic and unedited interactions.
 
 
+
 ## Authors
 
 - [@iutkarsh077](https://www.github.com/iutkarsh077)
